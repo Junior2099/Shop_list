@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Compras do Mês</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="https://img.icons8.com/?size=100&id=bpb1NWfrmmHv&format=png&color=000000">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        #item-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px 0 0 5px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        #item-input:focus {
+            border-color: #3498db;
+        }
+
+        #add-btn {
+            padding: 12px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        #add-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .shopping-list {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .shopping-list li {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+            transition: all 0.3s;
+        }
+
+        .shopping-list li:last-child {
+            border-bottom: none;
+        }
+
+        .shopping-list li:hover {
+            background-color: #f9f9f9;
+        }
+
+        .item-text {
+            flex: 1;
+            margin-left: 10px;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            color: #95a5a6;
+        }
+
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .category-select {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .export-btn {
+            padding: 10px 15px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .export-btn:hover {
+            background-color: #219653;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #95a5a6;
+            padding: 30px 0;
+            display: none;
+        }
+
+        .empty-state.show {
+            display: block;
+        }
+
+        .empty-state img {
+            width: 100px;
+            opacity: 0.7;
+            margin-bottom: 15px;
+        }
+
+        .category-header {
+            background-color: #f1f8fe;
+            font-weight: bold;
+            padding: 10px 15px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📝 Lista de Compras do Mês</h1>
+        
+        <div class="header-actions">
+            <select class="category-select" id="category-select">
+                <option value="graos">Grãos</option>
+                <option value="laticinios">Laticínios</option>
+                <option value="hortifruti">Hortifrúti</option>
+                <option value="limpeza">Limpeza</option>
+                <option value="bebidas">Bebidas</option>
+                <option value="outros">Outros</option>
+            </select>
+            
+            <button class="export-btn" id="export-pdf">
+                📄 Exportar para PDF
+            </button>
+        </div>
+        
+        <div class="input-group">
+            <input type="text" id="item-input" placeholder="Adicione um item (ex: Arroz 5kg)" autofocus>
+            <button id="add-btn">Adicionar</button>
+        </div>
+        
+        <div class="empty-state">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM5NWE1YTYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1zaG9wcGluZy1jYXJ0Ij48Y2lyY2xlIGN4PSI5IiBjeT0iMjEiIHI9IjEiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjIxIiByPSIxIi8+PHBhdGggZD0iTTEgMWg0bDIuNjggMTMuMzlhMiAyIDAgMCAwIDIgMS42MWg5LjcyYTIgMiAwIDAgMCAyLTEuNjFMMjMgNkg2Ii8+PC9zdmc+" alt="Carrinho vazio">
+            <h3>Sua lista está vazia</h3>
+            <p>Adicione itens para começar suas compras</p>
+        </div>
+        
+        <ul class="shopping-list" id="shopping-list"></ul>
+    </div>
+
+    <script>
+
+        const { jsPDF } = window.jspdf;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const itemInput = document.getElementById('item-input');
+            const addBtn = document.getElementById('add-btn');
+            const shoppingList = document.getElementById('shopping-list');
+            const emptyState = document.querySelector('.empty-state');
+            const categorySelect = document.getElementById('category-select');
+            const exportPdfBtn = document.getElementById('export-pdf');
+            
+            let items = JSON.parse(localStorage.getItem('shoppingItems')) || [];
+            
+            renderItems();
+
+            addBtn.addEventListener('click', addItem);
+            itemInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') addItem();
+            });
+
+            exportPdfBtn.addEventListener('click', exportToPdf);
+            
+            function addItem() {
+                const text = itemInput.value.trim();
+                if (text === '') return;
+                
+                const category = categorySelect.value;
+                const categoryName = categorySelect.options[categorySelect.selectedIndex].text;
+                
+                items.push({
+                    text,
+                    completed: false,
+                    category,
+                    categoryName
+                });
+                
+                saveItems();
+                renderItems();
+                itemInput.value = '';
+                itemInput.focus();
+            }
+            
+            function renderItems() {
+                shoppingList.innerHTML = '';
+                
+                if (items.length === 0) {
+                    emptyState.classList.add('show');
+                    return;
+                }
+                
+                emptyState.classList.remove('show');
+                
+                const groupedItems = {};
+                items.forEach(item => {
+                    if (!groupedItems[item.categoryName]) {
+                        groupedItems[item.categoryName] = [];
+                    }
+                    groupedItems[item.categoryName].push(item);
+                });
+                
+                for (const [categoryName, categoryItems] of Object.entries(groupedItems)) {
+                    const categoryHeader = document.createElement('li');
+                    categoryHeader.className = 'category-header';
+                    categoryHeader.textContent = categoryName;
+                    shoppingList.appendChild(categoryHeader);
+                    
+                    categoryItems.forEach((item, index) => {
+                        const globalIndex = items.findIndex(i => i === item);
+                        if (globalIndex !== -1) {
+                            const li = document.createElement('li');
+                            
+                            const checkbox = document.createElement('input');
+                            checkbox.type = 'checkbox';
+                            checkbox.checked = item.completed;
+                            checkbox.addEventListener('change', () => toggleCompleted(globalIndex));
+                            
+                            const span = document.createElement('span');
+                            span.className = 'item-text';
+                            span.textContent = item.text;
+                            if (item.completed) span.classList.add('completed');
+                            
+                            const deleteBtn = document.createElement('button');
+                            deleteBtn.className = 'delete-btn';
+                            deleteBtn.textContent = 'Remover';
+                            deleteBtn.addEventListener('click', () => removeItem(globalIndex));
+                            
+                            li.appendChild(checkbox);
+                            li.appendChild(span);
+                            li.appendChild(deleteBtn);
+                            
+                            shoppingList.appendChild(li);
+                        }
+                    });
+                }
+            }
+            
+            function toggleCompleted(index) {
+                items[index].completed = !items[index].completed;
+                saveItems();
+                renderItems();
+            }
+            
+            function removeItem(index) {
+                if (confirm('Remover este item da lista?')) {
+                    items.splice(index, 1);
+                    saveItems();
+                    renderItems();
+                }
+            }
+            
+            function saveItems() {
+                localStorage.setItem('shoppingItems', JSON.stringify(items));
+            }
+            
+            function exportToPdf() {
+                if (items.length === 0) {
+                    alert('A lista está vazia. Adicione itens antes de exportar.');
+                    return;
+                }
+                
+                const doc = new jsPDF();
+
+                doc.setFont('helvetica');
+
+                doc.setFontSize(20);
+                doc.setTextColor(44, 62, 80);
+                doc.text('Lista de Compras do Mês', 105, 20, { align: 'center' });
+                
+                doc.setFontSize(12);
+                doc.setTextColor(100, 100, 100);
+                const today = new Date();
+                const dateStr = today.toLocaleDateString('pt-BR', { 
+                    day: '2-digit', 
+                    month: '2-digit', 
+                    year: 'numeric' 
+                });
+                doc.text(`Data: ${dateStr}`, 105, 30, { align: 'center' });
+                
+                const groupedItems = {};
+                items.forEach(item => {
+
+                    const categoryName = item.categoryName || 'Outros';
+                    if (!groupedItems[categoryName]) {
+                        groupedItems[categoryName] = [];
+                    }
+                    groupedItems[categoryName].push(item);
+                });
+                
+                let yPosition = 45;
+                
+                for (const [categoryName, categoryItems] of Object.entries(groupedItems)) {
+
+                    doc.setFontSize(14);
+                    doc.setTextColor(41, 128, 185);
+                    doc.text(categoryName.toUpperCase(), 14, yPosition);
+                    yPosition += 8;
+                    
+                    doc.setDrawColor(200, 200, 200);
+                    doc.line(14, yPosition, 196, yPosition);
+                    yPosition += 10;
+                    
+                    doc.setFontSize(12);
+                    doc.setTextColor(0, 0, 0);
+                    
+                    categoryItems.forEach(item => {
+       
+                        const itemText = item.completed ? `✓ ${item.text}` : `- ${item.text}`;
+                        doc.text(itemText, 20, yPosition);
+                        yPosition += 7;
+                        
+                        if (yPosition > 270) {
+                            doc.addPage();
+                            yPosition = 20;
+                        }
+                    });
+                    
+                    yPosition += 5; 
+                }
+                
+                doc.setFontSize(10);
+                doc.setTextColor(150, 150, 150);
+                doc.text('Lista gerada em ' + new Date().toLocaleString('pt-BR'), 105, 285, { align: 'center' });
+
+                doc.save(`Lista de Compras - ${dateStr}.pdf`);
+            }
+        });
+    </script>
+</body>
+</html>
