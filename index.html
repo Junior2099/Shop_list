@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Compras do Mês</title>
-    <link rel="icon" type="image/png" sizes="32x32" href="https://img.icons8.com/?size=100&id=bpb1NWfrmmHv&format=png&color=000000">
+    <link rel="icon" type="image/png" sizes="32x32"
+        href="https://img.icons8.com/?size=100&id=bpb1NWfrmmHv&format=png&color=000000">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         * {
@@ -40,6 +41,8 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 20px;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .input-group {
@@ -128,6 +131,8 @@
             border-radius: 5px;
             font-size: 14px;
             outline: none;
+            flex: 1;
+            min-width: 120px;
         }
 
         .export-btn {
@@ -143,6 +148,26 @@
 
         .export-btn:hover {
             background-color: #219653;
+        }
+
+        .clear-btn {
+            padding: 10px 15px;
+            background-color: #e67e22;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .clear-btn:hover {
+            background-color: #d35400;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
         }
 
         .empty-state {
@@ -171,10 +196,11 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>📝 Lista de Compras do Mês</h1>
-        
+
         <div class="header-actions">
             <select class="category-select" id="category-select">
                 <option value="graos">Grãos</option>
@@ -184,79 +210,86 @@
                 <option value="bebidas">Bebidas</option>
                 <option value="outros">Outros</option>
             </select>
-            
-            <button class="export-btn" id="export-pdf">
-                📄 Exportar para PDF
-            </button>
+
+            <div class="action-buttons">
+                <button class="export-btn" id="export-pdf">
+                    📄 Exportar PDF
+                </button>
+                <button class="clear-btn" id="clear-list">
+                    🗑️ Limpar Tudo
+                </button>
+            </div>
         </div>
-        
+
         <div class="input-group">
             <input type="text" id="item-input" placeholder="Adicione um item (ex: Arroz 5kg)" autofocus>
             <button id="add-btn">Adicionar</button>
         </div>
-        
+
         <div class="empty-state">
-            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM5NWE1YTYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1zaG9wcGluZy1jYXJ0Ij48Y2lyY2xlIGN4PSI5IiBjeT0iMjEiIHI9IjEiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjIxIiByPSIxIi8+PHBhdGggZD0iTTEgMWg0bDIuNjggMTMuMzlhMiAyIDAgMCAwIDIgMS42MWg5LjcyYTIgMiAwIDAgMCAyLTEuNjFMMjMgNkg2Ii8+PC9zdmc+" alt="Carrinho vazio">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM5NWE1YTYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1zaG9wcGluZy1jYXJ0Ij48Y2lyY2xlIGN4PSI5IiBjeT0iMjEiIHI9IjEiLz48Y2lyY2xlIGN4PSIyMCIgY3k9IjIxIiByPSIxIi8+PHBhdGggZD0iTTEgMWg0bDIuNjggMTMuMzlhMiAyIDAgMCAwIDIgMS42MWg5LjcyYTIgMiAwIDAgMCAyLTEuNjFMMjMgNkg2Ii8+PC9zdmc+"
+                alt="Carrinho vazio">
             <h3>Sua lista está vazia</h3>
             <p>Adicione itens para começar suas compras</p>
         </div>
-        
+
         <ul class="shopping-list" id="shopping-list"></ul>
     </div>
 
     <script>
-
         const { jsPDF } = window.jspdf;
-        
-        document.addEventListener('DOMContentLoaded', function() {
+
+        document.addEventListener('DOMContentLoaded', function () {
             const itemInput = document.getElementById('item-input');
             const addBtn = document.getElementById('add-btn');
             const shoppingList = document.getElementById('shopping-list');
             const emptyState = document.querySelector('.empty-state');
             const categorySelect = document.getElementById('category-select');
             const exportPdfBtn = document.getElementById('export-pdf');
-            
+            const clearListBtn = document.getElementById('clear-list');
+
             let items = JSON.parse(localStorage.getItem('shoppingItems')) || [];
-            
+
             renderItems();
 
             addBtn.addEventListener('click', addItem);
-            itemInput.addEventListener('keypress', function(e) {
+            itemInput.addEventListener('keypress', function (e) {
                 if (e.key === 'Enter') addItem();
             });
 
             exportPdfBtn.addEventListener('click', exportToPdf);
-            
+            clearListBtn.addEventListener('click', clearAllItems);
+
             function addItem() {
                 const text = itemInput.value.trim();
                 if (text === '') return;
-                
+
                 const category = categorySelect.value;
                 const categoryName = categorySelect.options[categorySelect.selectedIndex].text;
-                
+
                 items.push({
                     text,
                     completed: false,
                     category,
                     categoryName
                 });
-                
+
                 saveItems();
                 renderItems();
                 itemInput.value = '';
                 itemInput.focus();
             }
-            
+
             function renderItems() {
                 shoppingList.innerHTML = '';
-                
+
                 if (items.length === 0) {
                     emptyState.classList.add('show');
                     return;
                 }
-                
+
                 emptyState.classList.remove('show');
-                
+
                 const groupedItems = {};
                 items.forEach(item => {
                     if (!groupedItems[item.categoryName]) {
@@ -264,49 +297,49 @@
                     }
                     groupedItems[item.categoryName].push(item);
                 });
-                
+
                 for (const [categoryName, categoryItems] of Object.entries(groupedItems)) {
                     const categoryHeader = document.createElement('li');
                     categoryHeader.className = 'category-header';
                     categoryHeader.textContent = categoryName;
                     shoppingList.appendChild(categoryHeader);
-                    
+
                     categoryItems.forEach((item, index) => {
                         const globalIndex = items.findIndex(i => i === item);
                         if (globalIndex !== -1) {
                             const li = document.createElement('li');
-                            
+
                             const checkbox = document.createElement('input');
                             checkbox.type = 'checkbox';
                             checkbox.checked = item.completed;
                             checkbox.addEventListener('change', () => toggleCompleted(globalIndex));
-                            
+
                             const span = document.createElement('span');
                             span.className = 'item-text';
                             span.textContent = item.text;
                             if (item.completed) span.classList.add('completed');
-                            
+
                             const deleteBtn = document.createElement('button');
                             deleteBtn.className = 'delete-btn';
                             deleteBtn.textContent = 'Remover';
                             deleteBtn.addEventListener('click', () => removeItem(globalIndex));
-                            
+
                             li.appendChild(checkbox);
                             li.appendChild(span);
                             li.appendChild(deleteBtn);
-                            
+
                             shoppingList.appendChild(li);
                         }
                     });
                 }
             }
-            
+
             function toggleCompleted(index) {
                 items[index].completed = !items[index].completed;
                 saveItems();
                 renderItems();
             }
-            
+
             function removeItem(index) {
                 if (confirm('Remover este item da lista?')) {
                     items.splice(index, 1);
@@ -314,79 +347,134 @@
                     renderItems();
                 }
             }
-            
+
+            function clearAllItems() {
+                if (items.length === 0) return;
+
+                if (confirm('Tem certeza que deseja limpar TODOS os itens da lista?')) {
+                    items = [];
+                    saveItems();
+                    renderItems();
+                }
+            }
+
             function saveItems() {
                 localStorage.setItem('shoppingItems', JSON.stringify(items));
             }
-            
+
             function exportToPdf() {
                 if (items.length === 0) {
                     alert('A lista está vazia. Adicione itens antes de exportar.');
                     return;
                 }
-                
+
                 const doc = new jsPDF();
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const margin = 14;
+                const colWidth = (pageWidth - 3 * margin) / 2;
+                let leftY = 40; // Posição Y da coluna esquerda
+                let rightY = 40; // Posição Y da coluna direita
+                let currentCol = 'left'; // Começa na coluna esquerda
+
 
                 doc.setFont('helvetica');
-
                 doc.setFontSize(20);
                 doc.setTextColor(44, 62, 80);
-                doc.text('Lista de Compras do Mês', 105, 20, { align: 'center' });
-                
+                doc.text('Lista de Compras do Mês', pageWidth / 2, 20, { align: 'center' });
+
                 doc.setFontSize(12);
                 doc.setTextColor(100, 100, 100);
                 const today = new Date();
-                const dateStr = today.toLocaleDateString('pt-BR', { 
-                    day: '2-digit', 
-                    month: '2-digit', 
-                    year: 'numeric' 
+                const dateStr = today.toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
                 });
-                doc.text(`Data: ${dateStr}`, 105, 30, { align: 'center' });
-                
+                doc.text(`Data: ${dateStr}`, pageWidth / 2, 30, { align: 'center' });
+
+
                 const groupedItems = {};
                 items.forEach(item => {
-
                     const categoryName = item.categoryName || 'Outros';
                     if (!groupedItems[categoryName]) {
                         groupedItems[categoryName] = [];
                     }
                     groupedItems[categoryName].push(item);
                 });
-                
-                let yPosition = 45;
-                
-                for (const [categoryName, categoryItems] of Object.entries(groupedItems)) {
+
+
+                function addCategoryToPdf(categoryName, categoryItems) {
+                    let xPosition = currentCol === 'left' ? margin : margin + colWidth + margin;
+                    let yPosition = currentCol === 'left' ? leftY : rightY;
+
+                    const estimatedSpace = 15 + (categoryItems.length * 7);
+                    const maxY = 270;
+
+                    if (yPosition + estimatedSpace > maxY) {
+                        if (currentCol === 'left') {
+                            currentCol = 'right';
+                            yPosition = rightY;
+                            xPosition = margin + colWidth + margin;
+                        } else {
+                            doc.addPage();
+                            leftY = 20;
+                            rightY = 20;
+                            currentCol = 'left';
+                            yPosition = leftY;
+                            xPosition = margin;
+                        }
+                    }
 
                     doc.setFontSize(14);
                     doc.setTextColor(41, 128, 185);
-                    doc.text(categoryName.toUpperCase(), 14, yPosition);
-                    yPosition += 8;
-                    
+                    doc.text(categoryName.toUpperCase(), xPosition, yPosition);
+                    yPosition += 7;
+
                     doc.setDrawColor(200, 200, 200);
-                    doc.line(14, yPosition, 196, yPosition);
+                    doc.line(xPosition, yPosition, xPosition + colWidth, yPosition);
                     yPosition += 10;
-                    
+
                     doc.setFontSize(12);
                     doc.setTextColor(0, 0, 0);
-                    
+
                     categoryItems.forEach(item => {
-       
                         const itemText = item.completed ? `✓ ${item.text}` : `- ${item.text}`;
-                        doc.text(itemText, 20, yPosition);
-                        yPosition += 7;
-                        
-                        if (yPosition > 270) {
-                            doc.addPage();
-                            yPosition = 20;
+                        const lines = doc.splitTextToSize(itemText, colWidth - 5);
+
+                        if (yPosition + (lines.length * 7) > maxY) {
+                            if (currentCol === 'left') {
+                                currentCol = 'right';
+                                yPosition = rightY;
+                                xPosition = margin + colWidth + margin;
+                            } else {
+                                doc.addPage();
+                                leftY = 20;
+                                rightY = 20;
+                                currentCol = 'left';
+                                yPosition = leftY;
+                                xPosition = margin;
+                            }
                         }
+
+                        doc.text(lines, xPosition + 5, yPosition);
+                        yPosition += lines.length * 7;
                     });
-                    
-                    yPosition += 5; 
+
+
+                    if (currentCol === 'left') {
+                        leftY = yPosition + 5;
+                    } else {
+                        rightY = yPosition + 5;
+                    }
                 }
-                
+
+                Object.entries(groupedItems).forEach(([categoryName, categoryItems]) => {
+                    addCategoryToPdf(categoryName, categoryItems);
+                });
+
                 doc.setFontSize(10);
                 doc.setTextColor(150, 150, 150);
-                doc.text('Lista gerada em ' + new Date().toLocaleString('pt-BR'), 105, 285, { align: 'center' });
+                doc.text('Lista gerada em ' + new Date().toLocaleString('pt-BR'), pageWidth / 2, 285, { align: 'center' });
 
                 doc.save(`Lista de Compras - ${dateStr}.pdf`);
             }
