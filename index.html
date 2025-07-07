@@ -18,7 +18,7 @@
         body {
             background-color: #f5f5f5;
             color: #333;
-            padding: 20px;
+            padding: 10px;
         }
 
         .container {
@@ -27,51 +27,85 @@
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            padding: 25px;
+            padding: 15px;
         }
 
         h1 {
             text-align: center;
             color: #2c3e50;
-            margin-bottom: 20px;
-            font-size: 28px;
+            margin-bottom: 15px;
+            font-size: 24px;
         }
 
         .header-actions {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 20px;
-            gap: 10px;
+            margin-bottom: 15px;
+            gap: 8px;
             flex-wrap: wrap;
         }
 
         .input-group {
             display: flex;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
         }
 
         #item-input {
             flex: 1;
-            padding: 12px 15px;
+            padding: 10px 12px;
             border: 2px solid #ddd;
             border-radius: 5px 0 0 5px;
-            font-size: 16px;
+            font-size: 14px;
             outline: none;
             transition: border-color 0.3s;
+            min-width: 150px;
+            text-transform: capitalize;
         }
 
-        #item-input:focus {
+        .quantity-control {
+            display: flex;
+            border: 2px solid #ddd;
+            border-left: none;
+            border-right: none;
+        }
+
+        .quantity-btn {
+            width: 30px;
+            background: #f5f5f5;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quantity-btn:hover {
+            background: #e0e0e0;
+        }
+
+        #quantity-input {
+            width: 40px;
+            padding: 10px;
+            border: none;
+            text-align: center;
+            font-size: 14px;
+            outline: none;
+        }
+
+        #item-input:focus, .quantity-control:focus-within {
             border-color: #3498db;
         }
 
         #add-btn {
-            padding: 12px 20px;
+            padding: 10px 15px;
             background-color: #3498db;
             color: white;
             border: none;
             border-radius: 0 5px 5px 0;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
             transition: background-color 0.3s;
         }
 
@@ -81,15 +115,16 @@
 
         .shopping-list {
             list-style: none;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .shopping-list li {
             display: flex;
             align-items: center;
-            padding: 12px 15px;
+            padding: 10px 12px;
             border-bottom: 1px solid #eee;
             transition: all 0.3s;
+            cursor: grab;
         }
 
         .shopping-list li:last-child {
@@ -100,9 +135,24 @@
             background-color: #f9f9f9;
         }
 
+        .shopping-list li.dragging {
+            opacity: 0.5;
+            background-color: #e3f2fd;
+        }
+
         .item-text {
             flex: 1;
-            margin-left: 10px;
+            margin-left: 8px;
+            margin-right: 8px;
+            font-size: 14px;
+        }
+
+        .item-quantity {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-right: 8px;
+            min-width: 40px;
+            text-align: right;
         }
 
         .completed {
@@ -115,49 +165,75 @@
             color: white;
             border: none;
             border-radius: 5px;
-            padding: 5px 10px;
+            padding: 4px 8px;
             cursor: pointer;
-            margin-left: 10px;
+            margin-left: 5px;
             transition: background-color 0.3s;
+            font-size: 12px;
         }
 
         .delete-btn:hover {
             background-color: #c0392b;
         }
 
+        .move-btn {
+            background-color: #9b59b6;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 4px 8px;
+            cursor: pointer;
+            margin-left: 5px;
+            transition: background-color 0.3s;
+            font-size: 12px;
+        }
+
+        .move-btn:hover {
+            background-color: #8e44ad;
+        }
+
         .category-select {
-            padding: 10px;
+            padding: 8px;
             border: 2px solid #ddd;
             border-radius: 5px;
-            font-size: 14px;
+            font-size: 13px;
             outline: none;
             flex: 1;
             min-width: 120px;
         }
 
-        .export-btn {
-            padding: 10px 15px;
+        .export-btn, .import-btn {
+            padding: 8px 12px;
             background-color: #27ae60;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
             transition: background-color 0.3s;
+        }
+
+        .import-btn {
+            background-color: #3498db;
+            margin-right: 5px;
         }
 
         .export-btn:hover {
             background-color: #219653;
         }
 
+        .import-btn:hover {
+            background-color: #2980b9;
+        }
+
         .clear-btn {
-            padding: 10px 15px;
+            padding: 8px 12px;
             background-color: #e67e22;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
             transition: background-color 0.3s;
         }
 
@@ -167,13 +243,14 @@
 
         .action-buttons {
             display: flex;
-            gap: 10px;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
         .empty-state {
             text-align: center;
             color: #95a5a6;
-            padding: 30px 0;
+            padding: 20px 0;
             display: none;
         }
 
@@ -182,17 +259,61 @@
         }
 
         .empty-state img {
-            width: 100px;
+            width: 80px;
             opacity: 0.7;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .category-header {
             background-color: #f1f8fe;
             font-weight: bold;
-            padding: 10px 15px;
-            margin-top: 10px;
+            padding: 8px 12px;
+            margin-top: 8px;
             border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            #item-input, .quantity-control, #add-btn {
+                width: 100%;
+                border-radius: 5px;
+                margin-bottom: 5px;
+            }
+            
+            .quantity-control {
+                border: 2px solid #ddd;
+                border-radius: 5px;
+            }
+            
+            #add-btn {
+                border-radius: 5px;
+            }
+            
+            .header-actions {
+                flex-direction: column;
+            }
+            
+            .action-buttons {
+                margin-top: 10px;
+                justify-content: space-between;
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -208,21 +329,33 @@
                 <option value="hortifruti">Hortifrúti</option>
                 <option value="limpeza">Limpeza</option>
                 <option value="bebidas">Bebidas</option>
+                <option value="misturas">Misturas</option>
                 <option value="outros">Outros</option>
             </select>
 
             <div class="action-buttons">
+                <button class="import-btn" id="import-json">
+                    📥 Importar
+                </button>
+                <button class="export-btn" id="export-json">
+                    📤 Exportar
+                </button>
                 <button class="export-btn" id="export-pdf">
-                    📄 Exportar PDF
+                    📄 PDF
                 </button>
                 <button class="clear-btn" id="clear-list">
-                    🗑️ Limpar Tudo
+                    🗑️ Limpar
                 </button>
             </div>
         </div>
 
         <div class="input-group">
-            <input type="text" id="item-input" placeholder="Adicione um item (ex: Arroz 5kg)" autofocus>
+            <input type="text" id="item-input" placeholder="Item (ex: Arroz)" autofocus>
+            <div class="quantity-control">
+                <button class="quantity-btn" id="decrement-btn">-</button>
+                <input type="text" id="quantity-input" value="1" placeholder="Qtd">
+                <button class="quantity-btn" id="increment-btn">+</button>
+            </div>
             <button id="add-btn">Adicionar</button>
         </div>
 
@@ -234,6 +367,8 @@
         </div>
 
         <ul class="shopping-list" id="shopping-list"></ul>
+        
+        <input type="file" id="file-input" class="file-input" accept=".json">
     </div>
 
     <script>
@@ -241,14 +376,23 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             const itemInput = document.getElementById('item-input');
+            const quantityInput = document.getElementById('quantity-input');
+            const incrementBtn = document.getElementById('increment-btn');
+            const decrementBtn = document.getElementById('decrement-btn');
             const addBtn = document.getElementById('add-btn');
             const shoppingList = document.getElementById('shopping-list');
             const emptyState = document.querySelector('.empty-state');
             const categorySelect = document.getElementById('category-select');
             const exportPdfBtn = document.getElementById('export-pdf');
+            const exportJsonBtn = document.getElementById('export-json');
+            const importJsonBtn = document.getElementById('import-json');
+            const fileInput = document.getElementById('file-input');
             const clearListBtn = document.getElementById('clear-list');
 
             let items = JSON.parse(localStorage.getItem('shoppingItems')) || [];
+            let draggedItem = null;
+
+            setupDragAndDrop();
 
             renderItems();
 
@@ -256,19 +400,108 @@
             itemInput.addEventListener('keypress', function (e) {
                 if (e.key === 'Enter') addItem();
             });
+            incrementBtn.addEventListener('click', incrementQuantity);
+            decrementBtn.addEventListener('click', decrementQuantity);
+            quantityInput.addEventListener('change', validateQuantity);
+            itemInput.addEventListener('input', capitalizeFirstLetter);
 
             exportPdfBtn.addEventListener('click', exportToPdf);
+            exportJsonBtn.addEventListener('click', exportToJson);
+            importJsonBtn.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', importFromJson);
             clearListBtn.addEventListener('click', clearAllItems);
+
+            function setupDragAndDrop() {
+                shoppingList.addEventListener('dragstart', function(e) {
+                    if (e.target.tagName === 'LI' && !e.target.classList.contains('category-header')) {
+                        draggedItem = e.target;
+                        e.target.classList.add('dragging');
+                        e.dataTransfer.effectAllowed = 'move';
+                        e.dataTransfer.setData('text/html', e.target.innerHTML);
+                    }
+                });
+
+                shoppingList.addEventListener('dragend', function(e) {
+                    if (e.target.tagName === 'LI') {
+                        e.target.classList.remove('dragging');
+                    }
+                });
+
+                shoppingList.addEventListener('dragover', function(e) {
+                    if (e.target.tagName === 'LI' && e.target.classList.contains('category-header')) {
+                        e.preventDefault();
+                        e.dataTransfer.dropEffect = 'move';
+                    }
+                });
+
+                shoppingList.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    if (e.target.tagName === 'LI' && e.target.classList.contains('category-header') && draggedItem) {
+                        const categoryName = e.target.textContent;
+                        const itemIndex = Array.from(shoppingList.children).indexOf(draggedItem) - 1; 
+                        let item;
+                        let categoryCount = 0;
+                        for (let i = 0; i < items.length; i++) {
+                            if (i === 0 || items[i].categoryName !== items[i-1].categoryName) {
+                                categoryCount++;
+                            }
+                            if (categoryCount - 1 === itemIndex) {
+                                item = items[i];
+                                break;
+                            }
+                        }
+                        
+                        if (item) {
+                            const categoryOption = Array.from(categorySelect.options).find(opt => opt.text === categoryName);
+                            if (categoryOption) {
+                                item.category = categoryOption.value;
+                                item.categoryName = categoryName;
+                                saveItems();
+                                renderItems();
+                            }
+                        }
+                    }
+                });
+            }
+
+            function capitalizeFirstLetter() {
+                if (this.value.length === 1) {
+                    this.value = this.value.charAt(0).toUpperCase() + this.value.slice(1);
+                }
+            }
+
+            function incrementQuantity() {
+                let value = parseInt(quantityInput.value) || 1;
+                value++;
+                quantityInput.value = value;
+            }
+
+            function decrementQuantity() {
+                let value = parseInt(quantityInput.value) || 1;
+                if (value > 1) {
+                    value--;
+                    quantityInput.value = value;
+                }
+            }
+
+            function validateQuantity() {
+                let value = parseInt(this.value);
+                if (isNaN(value) || value < 1) {
+                    this.value = 1;
+                }
+            }
 
             function addItem() {
                 const text = itemInput.value.trim();
                 if (text === '') return;
 
+                const quantity = quantityInput.value.trim() || '1';
                 const category = categorySelect.value;
                 const categoryName = categorySelect.options[categorySelect.selectedIndex].text;
 
                 items.push({
-                    text,
+                    text: text.charAt(0).toUpperCase() + text.slice(1),
+                    quantity,
                     completed: false,
                     category,
                     categoryName
@@ -277,6 +510,7 @@
                 saveItems();
                 renderItems();
                 itemInput.value = '';
+                quantityInput.value = '1';
                 itemInput.focus();
             }
 
@@ -302,12 +536,14 @@
                     const categoryHeader = document.createElement('li');
                     categoryHeader.className = 'category-header';
                     categoryHeader.textContent = categoryName;
+                    categoryHeader.draggable = false;
                     shoppingList.appendChild(categoryHeader);
 
                     categoryItems.forEach((item, index) => {
                         const globalIndex = items.findIndex(i => i === item);
                         if (globalIndex !== -1) {
                             const li = document.createElement('li');
+                            li.draggable = true;
 
                             const checkbox = document.createElement('input');
                             checkbox.type = 'checkbox';
@@ -319,13 +555,21 @@
                             span.textContent = item.text;
                             if (item.completed) span.classList.add('completed');
 
+                            const quantitySpan = document.createElement('span');
+                            quantitySpan.className = 'item-quantity';
+                            quantitySpan.textContent = item.quantity;
+
                             const deleteBtn = document.createElement('button');
                             deleteBtn.className = 'delete-btn';
                             deleteBtn.textContent = 'Remover';
-                            deleteBtn.addEventListener('click', () => removeItem(globalIndex));
+                            deleteBtn.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                removeItem(globalIndex);
+                            });
 
                             li.appendChild(checkbox);
                             li.appendChild(span);
+                            li.appendChild(quantitySpan);
                             li.appendChild(deleteBtn);
 
                             shoppingList.appendChild(li);
@@ -362,6 +606,66 @@
                 localStorage.setItem('shoppingItems', JSON.stringify(items));
             }
 
+            function exportToJson() {
+                if (items.length === 0) {
+                    alert('A lista está vazia. Adicione itens antes de exportar.');
+                    return;
+                }
+
+                const dataStr = JSON.stringify(items, null, 2);
+                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                
+                const exportFileDefaultName = `lista-compras-${new Date().toISOString().slice(0,10)}.json`;
+                
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', exportFileDefaultName);
+                linkElement.click();
+            }
+
+            function importFromJson(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const importedItems = JSON.parse(e.target.result);
+                        
+                        if (Array.isArray(importedItems)) {
+                            const isValid = importedItems.every(item => 
+                                item.text && typeof item.text === 'string' &&
+                                item.quantity && (typeof item.quantity === 'string' || typeof item.quantity === 'number') &&
+                                typeof item.completed === 'boolean' &&
+                                item.category && typeof item.category === 'string' &&
+                                item.categoryName && typeof item.categoryName === 'string'
+                            );
+                            
+                            if (!isValid) {
+                                throw new Error("O arquivo não contém itens no formato correto.");
+                            }
+                            
+                            if (confirm(`Deseja importar ${importedItems.length} itens? Isso substituirá sua lista atual.`)) {
+                                items = importedItems.map(item => ({
+                                    ...item,
+                                    quantity: String(item.quantity)
+                                }));
+                                saveItems();
+                                renderItems();
+                                alert('Lista importada com sucesso!');
+                            }
+                        } else {
+                            alert('Arquivo inválido: deve conter um array de itens.');
+                        }
+                    } catch (error) {
+                        alert('Erro ao importar lista: ' + error.message);
+                        console.error("Erro na importação:", error);
+                    }
+                    event.target.value = '';
+                };
+                reader.readAsText(file);
+            }
+
             function exportToPdf() {
                 if (items.length === 0) {
                     alert('A lista está vazia. Adicione itens antes de exportar.');
@@ -372,10 +676,9 @@
                 const pageWidth = doc.internal.pageSize.getWidth();
                 const margin = 14;
                 const colWidth = (pageWidth - 3 * margin) / 2;
-                let leftY = 40; // Posição Y da coluna esquerda
-                let rightY = 40; // Posição Y da coluna direita
-                let currentCol = 'left'; // Começa na coluna esquerda
-
+                let leftY = 40;
+                let rightY = 40;
+                let currentCol = 'left';
 
                 doc.setFont('helvetica');
                 doc.setFontSize(20);
@@ -392,7 +695,6 @@
                 });
                 doc.text(`Data: ${dateStr}`, pageWidth / 2, 30, { align: 'center' });
 
-
                 const groupedItems = {};
                 items.forEach(item => {
                     const categoryName = item.categoryName || 'Outros';
@@ -401,7 +703,6 @@
                     }
                     groupedItems[categoryName].push(item);
                 });
-
 
                 function addCategoryToPdf(categoryName, categoryItems) {
                     let xPosition = currentCol === 'left' ? margin : margin + colWidth + margin;
@@ -438,8 +739,14 @@
                     doc.setTextColor(0, 0, 0);
 
                     categoryItems.forEach(item => {
-                        const itemText = item.completed ? `✓ ${item.text}` : `- ${item.text}`;
-                        const lines = doc.splitTextToSize(itemText, colWidth - 5);
+                        doc.rect(xPosition, yPosition - 3, 5, 5);
+                        if (item.completed) {
+                            doc.line(xPosition, yPosition - 3, xPosition + 5, yPosition + 2);
+                            doc.line(xPosition, yPosition + 2, xPosition + 5, yPosition - 3);
+                        }
+                        
+                        const itemText = `${item.text} (${item.quantity})`;
+                        const lines = doc.splitTextToSize(itemText, colWidth - 15);
 
                         if (yPosition + (lines.length * 7) > maxY) {
                             if (currentCol === 'left') {
@@ -456,10 +763,9 @@
                             }
                         }
 
-                        doc.text(lines, xPosition + 5, yPosition);
+                        doc.text(lines, xPosition + 10, yPosition);
                         yPosition += lines.length * 7;
                     });
-
 
                     if (currentCol === 'left') {
                         leftY = yPosition + 5;
